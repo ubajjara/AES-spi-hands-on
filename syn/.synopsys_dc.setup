@@ -1,0 +1,18 @@
+#caminho da biblioteca
+set search_path "$search_path libs"
+
+#biblioteca alvo
+set target_library "saed32rvt_tt1p05v25c.db"
+
+#Bibliteca de link
+set link_library "* saed32rvt_tt1p05v25c.db dw_foundation.sldb"
+
+#Biblioteca designWare
+set synthetic_library "dw_foundation.sldb"
+
+#Biblioteca de trabalho
+define_design_lib WORK -path ./work
+
+set hdlin_enable_rtl_for_iq 1
+set hdlin_check_no_latch true
+set compile_autonogate true
