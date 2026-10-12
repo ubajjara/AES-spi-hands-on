@@ -69,14 +69,6 @@ synth:
 	dc_shell -f $(SCRIPTS_DIR)/synth.tcl | tee $(REPORTS_DIR)/synth.log
 
 # ==========================================
-# 6. Simulação pós-síntese
-# ==========================================
-sim_netlist: clean_sim synth
-	vlogan $(VLOGAN_PARAMS) $(LIBRARY_FILE) $(NETLIST_FILE) $(TB_FILES)
-	vcs $(VCS_PARAMS) $(TOP) -o $(SIMV_POST_SYNTH)
-	./$(SIMV_POST_SYNTH)
-
-# ==========================================
 # Limpeza da síntese
 # ==========================================
 clean_synth:
