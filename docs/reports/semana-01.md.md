@@ -116,16 +116,6 @@ Usa as transformações inversas e as Round Keys em ordem reversa:
 
 AddRoundKey é sua própria inversa (XOR). A decifragem não é a cifragem executada ao contrário: usa operações inversas e a sequência de chaves invertida. Se o IP implementará só cifragem ou também decifragem depende da especificação funcional.
 
-### 1.8 Implicações para a microarquitetura
-
-O núcleo divide-se em **datapath** (registrador de State, SubBytes, ShiftRows, MixColumns, AddRoundKey e expansão de chave) e **controle** (contador de rodadas, seleção das transformações, sinalização de início e fim).
-
-- **Iterativa (uma rodada por ciclo):** menor área e maior latência; candidata natural para um acelerador de baixo consumo.
-- **Desenrolada ou pipeline:** maior vazão, com mais área e potência.
-
-Pontos de atenção do RTL: implementação da S-box (LUT versus lógica), MixColumns em GF(2⁸), geração e armazenamento das Round Keys (*on-the-fly* ou pré-calculadas), ordenação dos bytes no State, ausência de MixColumns na última rodada e número de rodadas conforme a variante.
-
----
 
 ## 2. SPI — Serial Peripheral Interface
 
@@ -186,29 +176,4 @@ SPI Master → SPI Slave → Sincronização/CDC → Banco de Registradores
 
 O **banco de registradores** faz a interface entre os comandos SPI e o núcleo AES (dados de entrada, chave, controle, status e resultado). O **núcleo AES** executa o processamento criptográfico, e a lógica ao redor controla o início da operação e identifica a conclusão.
 
-### 3.1 Domínios de clock (principal risco técnico)
-
-O sistema possui ao menos dois domínios:
-
-- **domínio do SCLK:** registrador de deslocamento, contador de bits e saída MISO;
-- **domínio do sistema:** banco de registradores, núcleo AES e interface de memória, no clock gerado pelo PLL.
-
-Consequências a tratar:
-
-- sinais de 1 bit que cruzam domínios precisam de **sincronizadores** (por exemplo, dois flip-flops) contra metaestabilidade;
-- **barramentos multibit** não podem ser sincronizados bit a bit; exigem um protocolo de transferência coerente (handshake ou FIFO), senão ocorrem capturas inconsistentes de bits de ciclos diferentes;
-- o PLL sai do reset com configuração padrão e trava sozinho (`locked`); seus registradores só devem ser reprogramados pelo SPI após o `locked`;
-- a estratégia de reset de cada domínio precisa ser definida.
-
-Esse ponto deve ser desenhado explicitamente antes de escrever o RTL do SPI.
-
----
-
-## 4. Conclusões
-
-- O AES é bem estruturado para hardware. A principal decisão de arquitetura é a microarquitetura (iterativa versus pipeline), que impacta diretamente área, timing e potência, o foco do projeto.
-- O SPI é simples no fluxo de bits, mas sua integração ao sistema introduz o problema de CDC, o maior risco técnico, que exige solução arquitetural.
-- Permanecem em aberto, dependendo da especificação funcional do instrutor: variante de AES suportada, escopo (cifragem e/ou decifragem), modo SPI e formato dos comandos, mapa de registradores e estratégia de reset e CDC.
-
----
 
