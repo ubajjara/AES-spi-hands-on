@@ -6,6 +6,7 @@ TB_DIR      = tb
 SCRIPTS_DIR = syn
 REPORTS_DIR = $(SCRIPTS_DIR)/reports
 NETLIST_DIR = $(SCRIPTS_DIR)/netlist
+LINT_RPT = docs/reports/lint_semana_02.rpt
 
 # ==========================================
 # Arquivos
@@ -14,10 +15,10 @@ RTL_FILES = $(RTL_DIR)/*.sv
 TB_FILES  = $(TB_DIR)/*.sv
 
 # Top do testbench
-TOP = tb_porta_and
+TOP = tb_minisoc_aes_week2
 
 # Pós-síntese (ajuste LIBRARY_FILE ao caminho real dos modelos Verilog do SAED32)
-NETLIST_FILE    = $(NETLIST_DIR)/porta_and_syn.v
+#NETLIST_FILE    = $(NETLIST_DIR)/porta_and_syn.v
 LIBRARY_FILE    = libs/saed32nm.v
 SIMV_POST_SYNTH = simv_post
 
@@ -41,7 +42,7 @@ VCS_PARAMS = -full64 \
 # 1. Verificação de sintaxe
 # ==========================================
 syntax:
-	vlogan $(VLOGAN_PARAMS) $(RTL_FILES) $(TB_FILES)
+	vlogan $(VLOGAN_PARAMS) $(RTL_FILES) $(TB_FILES) -l $(LINT_RPT)
 
 # ==========================================
 # 2. Compilação / Elaboração
@@ -67,6 +68,7 @@ wave:
 synth:
 	mkdir -p $(REPORTS_DIR) $(NETLIST_DIR)
 	dc_shell -f $(SCRIPTS_DIR)/synth.tcl | tee $(REPORTS_DIR)/synth.log
+
 
 # ==========================================
 # Limpeza da síntese
