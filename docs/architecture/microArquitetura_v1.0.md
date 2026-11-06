@@ -90,8 +90,7 @@ Sinais de interface definidos para o submódulo:
 | 010  | PCBC | Encadeamento propagado com entrada/saída do bloco anterior. |
 | 011  | CFB | Usa o primitive de encrypt para gerar o fluxo aplicado por XOR. |
 | 100  | OFB | Usa o primitive de encrypt e realimenta a saída criptográfica |
-| 101  | CTR | Usa AES encrypt sobre IV XOR contador de 64 bits zero-extendido;
-contador é incrementado por bloco |
+| 101  | CTR | Usa AES encrypt sobre IV XOR contador de 64 bits zero-extendido contador é incrementado por bloco |
 
 Duas consequências para a RTL. Como o resultado é gravado **no lugar**, precisa ser guardado antes de ser sobrescrito: por isso existe `blk_in`, que alimenta `V` na decifragem de CBC, PCBC e CFB. E o sentido inverso só é exigido em ECB, CBC e PCBC.
 
