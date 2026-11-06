@@ -81,18 +81,19 @@ Sinais de interface definidos para o submódulo:
 *   **Entradas:** `clk_i`, `rst_n_i`, `key_load_i`, `decrypt_i`, `key_i[127:0]`, `blk_start_i`, `blk_i[127:0]`
 *   **Saídas:** `key_ready_o`, `blk_o[127:0]`, `blk_done_o`, `busy_o`
 
-**Modos.** `minisoc_aes_top` monta a entrada do `dp` e trata a saída. `V` guarda IV e encadeamento. `E` e `D` são a cifragem e a decifragem de um bloco.
+**Modos.** `minisoc_aes_top` monta a entrada do `dp` e trata a saída. `V` guarda IV e encadeamento. 
 
-| MODE | Primitiva | Entrada do `dp` | Saída gravada na memória | Próximo `V` |
-|---|---|---|---|---|
-| 000 ECB | E ou D | bloco lido | saída do `dp` | |
-| 001 CBC | E ou D | cifra: `P ^ V`; decifra: `C` | cifra: `E(...)`; decifra: `D(C) ^ V` | `C` (o texto cifrado do bloco) |
-| 010 PCBC | E ou D | cifra: `P ^ V`; decifra: `C` | cifra: `E(...)`; decifra: `D(C) ^ V` | `P ^ C` |
-| 011 CFB | sempre E | `V` | `bloco ^ E(V)` | `C` |
-| 100 OFB | sempre E | `V` | `bloco ^ E(V)` | `E(V)` |
-| 101 CTR | sempre E | `V ^ {64'b0, ctr}` | `bloco ^ E(...)` | `V` fixo; `ctr + 1` |
+| MODE | MODO | comportamento |
+|---|---|---------|
+| 000  | ECB | Cada bloco é cifrado/decrifrado independentemente. |
+| 001  | CBC | Encadeamento por XOR com o vetor de chaining. |
+| 010  | PCBC | Encadeamento propagado com entrada/saída do bloco anterior. |
+| 011  | CFB | Usa o primitive de encrypt para gerar o fluxo aplicado por XOR. |
+| 100  | OFB | Usa o primitive de encrypt e realimenta a saída criptográfica |
+| 101  | CTR | Usa AES encrypt sobre IV XOR contador de 64 bits zero-extendido;
+contador é incrementado por bloco |
 
-Duas consequências para a RTL. Como o resultado é gravado **no lugar**, `C` precisa ser guardado antes de ser sobrescrito: por isso existe `blk_in`, que alimenta `V` na decifragem de CBC, PCBC e CFB. E o sentido inverso só é exigido em ECB, CBC e PCBC.
+Duas consequências para a RTL. Como o resultado é gravado **no lugar**, precisa ser guardado antes de ser sobrescrito: por isso existe `blk_in`, que alimenta `V` na decifragem de CBC, PCBC e CFB. E o sentido inverso só é exigido em ECB, CBC e PCBC.
 
 ## 4. FSM do Controlador `minisoc_aes_top`
 
