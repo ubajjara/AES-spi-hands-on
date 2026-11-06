@@ -32,7 +32,7 @@ flowchart TB
   MEM[("Memória compartilhada")]
   subgraph TOP["minisoc_aes_top"]
     FSM["FSM de Controle"]
-    REG["Registradores de Encadeamento<br/>(V, ctr, blk_in)"]
+    REG["Registradores de Encadeamento<br/>(V, blk_in)"]
     PRE["XOR de Entrada"]
     POST["XOR de Saída"]
   end
@@ -65,7 +65,6 @@ flowchart TB
 ### 3.1 Registradores de Encadeamento
 Para suportar os diferentes modos de operação, o módulo `minisoc_aes_top` mantém os seguintes registradores:
 - **`V` (128 bits):** Acumulador de vetor de inicialização ou bloco de feedback.
-- **`ctr` (64 bits):** Contador incrementado por bloco para o modo CTR.
 - **`blk_in` (128 bits):** Registrador de retenção do bloco original lido da memória, necessário para modos que requerem feedback do texto original após a decifragem (ex: CBC, CFB).
 
 ### 3.2 Operações por Ciclo do Datapath
