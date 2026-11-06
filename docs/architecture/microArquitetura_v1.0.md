@@ -13,7 +13,7 @@ Este documento especifica a implementação dos módulos `minisoc_aes_top` e `mi
 | Round keys | **Em tempo real**, uma por ciclo, no `minisoc_aes_key_exp`, que sabe andar nos dois sentidos | Guardar as 11 round keys (1408 flops): elimina o passo inverso, mas custa área e potência |
 | Modos de operação | Encadeamento fora do datapath: `minisoc_aes_top` faz as XORs de entrada e de saída; `minisoc_aes_dp` só cifra ou decifra um bloco | Modos dentro do `dp` |
 | Registradores de status | `BUSY`, `DONE`, `ERROR` e o valor final de `BLOCKS_DONE` ficam no domínio **clk** (always-on) | Ficar no domínio `sys_clk`: o status seria apagado se o PLL fosse desligado depois do término |
-| CDC | Toggle + 2 flops para eventos, Gray + 2 flops para o contador, quasi-estático para a configuração | |
+| CDC | Toggle + 2 flops para eventos, Gray + 2 flops para o contador |
 
 ## 2. Domínios de Clock
 
@@ -137,11 +137,10 @@ stateDiagram-v2
 | Sinal / Barramento | Cruzamento | Técnica de Sincronização |
 |---|---|---|
 | **Comandos SPI** | `spi_sclk` → `clk` | Toggle event + 2 FFs |
-| **Leitura (MISO)** | `clk` → `spi_sclk` | Sinal quasi-estático (estável 1 quadro antes da leitura) |
 | **START** | `clk` → `sys_clk` | Toggle + 2 FFs |
 | **DONE / ERROR** | `sys_clk` → `clk` | Toggle + 2 FFs |
 | **BLOCKS_DONE** | `sys_clk` → `clk` | Codificação Gray (9 bits) + 2 FFs |
-| **Configuração** | `clk` → `sys_clk` | Quasi-estático (amostrado estavelmente no estado CHECK) |
+
 
 ## 6. Sequência de Reset
 
