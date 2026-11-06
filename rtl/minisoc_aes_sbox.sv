@@ -1,7 +1,5 @@
 // minisoc_aes_sbox -- S-box do AES (FIPS-197, Figura 7)
-// Puramente combinacional: 8 bits -> 8 bits.
-// Tabela da Figura 7: o nibble alto da entrada (x) escolhe a linha e o nibble
-// baixo (y) escolhe a coluna. Exemplo: 8'h53 -> linha 5, coluna 3 -> 8'hed.
+
 module minisoc_aes_sbox (
   input  logic [7:0] data_i,
   output logic [7:0] data_o

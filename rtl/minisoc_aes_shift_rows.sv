@@ -1,7 +1,5 @@
 // minisoc_aes_shift_rows -- transformação ShiftRows (FIPS-197, seção 5.1.2)
-// Apenas reordenação de fios: a linha r do estado é rotacionada r posições
-// para a esquerda, s'[r][c] = s[r][(c + r) mod 4].
-// Convenção do estado: byte n em [127-8n -: 8] (byte 0 em [127:120],
+
 module minisoc_aes_shift_rows (
   input  logic [127:0] state_i,
   output logic [127:0] state_o
