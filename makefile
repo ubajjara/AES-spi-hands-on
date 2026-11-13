@@ -6,7 +6,7 @@ TB_DIR      = tb
 SCRIPTS_DIR = syn
 REPORTS_DIR = $(SCRIPTS_DIR)/reports
 NETLIST_DIR = $(SCRIPTS_DIR)/netlist
-LINT_RPT = docs/reports/lint_semana_02.rpt
+LINT_RPT = docs/reports/lint_semana_04.rpt
 
 # ==========================================
 # Arquivos
@@ -15,7 +15,7 @@ RTL_FILES = $(RTL_DIR)/*.sv
 TB_FILES  = $(TB_DIR)/*.sv
 
 # Top do testbench
-TOP = tb_minisoc_aes_week2
+TOP = tb_minisoc_aes_week4_key_exp   # ou tb_minisoc_aes_week4_appb / tb_minisoc_aes_week4_appc
 
 # Pós-síntese (ajuste LIBRARY_FILE ao caminho real dos modelos Verilog do SAED32)
 #NETLIST_FILE    = $(NETLIST_DIR)/porta_and_syn.v
